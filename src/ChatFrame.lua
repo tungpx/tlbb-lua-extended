@@ -1649,7 +1649,7 @@ function CommandController.dispatch(commandStr)
             end
             i = i + 1
         end
-        print("[ERROR] This command is not supported: '"..command.."'")
+        PushDebugMessage("[ERROR] This command is not supported: '"..command.."'")
     else
         CommandController.call(command, arguments)
     end
@@ -1664,7 +1664,7 @@ function CommandController.call(cmdName, arguments)
     local func = loadstring("return ".."Command_"..cmdName.."(...)")
     local status, result = pcall(func, arguments)
     if status == false then
-        print("Failed to load command '"..cmdName.."'")
+        PushDebugMessage("Failed to load command '"..cmdName.."'")
     end
 end
 --- End: 'CommandController' declaration
@@ -1709,7 +1709,7 @@ end
 --  COMMANDS DECALARATION
 --  ---------------------------------------
 function Command_goto(arguments)
-    print("Command 'goto' loaded")
+    PushDebugMessage("Command 'goto' loaded")
 
     local mapName = arguments[1]
     local xPos = arguments[2]
@@ -1718,13 +1718,24 @@ function Command_goto(arguments)
     -- validate map
     local mapKey = MapData.getMapKey(mapName);
     if mapKey == nil then
-        print("[ERROR] This map is not supported: '"..mapName.."'")
+        PushDebugMessage("[ERROR] This map is not supported: '"..mapName.."'")
+        return
+    end
+    -- validate positions
+    if xPos == nil  or yPos == nil or tonumber(xPos) < 0  or tonumber(yPos) < 0 then
+        PushDebugMessage("[ERROR] Invalid position coordinates")
         return
     end
     -- process
     local mapID = MapData.getMapID(mapKey)
-    print("mapID: "..mapID)
+    PushDebugMessage("map: "..mapKey.." (id="..mapID..")")
 end
 
---- TEST
-CommandController.process("!goto ll")
+---
+-- (Only for testing)
+-- Overide original function 'PushDebugMessage'.
+-- Note: should comment this code-block before release.
+--
+--function PushDebugMessage(text)
+--    print(text)
+--end
