@@ -1729,6 +1729,10 @@ function Command_goto(arguments)
     -- process
     local mapID = MapData.getMapID(mapKey)
     PushDebugMessage("map: "..mapKey.." (id="..mapID..")")
+    local result = AutoRunToTarget(tonumber(xPos), tonumber(yPos));
+    if result == 0 then
+        PushDebugMessage("#{ZDXL_90520_3}")
+    end
 end
 
 ---
