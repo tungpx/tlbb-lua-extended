@@ -662,7 +662,7 @@ function ChatFrame_OnEvent(event)
     end
 
     if (event == "UI_COMMAND" and tostring(arg0) == "TEST_FUNC") then
-        CommandController.process("!goto dl 50 50")
+        CommandController.dispatch("goto dl 50 50")
     end
 end
 
@@ -1688,6 +1688,7 @@ function ChatFrame_TextAccepted()
 	local txt = Chat_EditBox:GetItemElementsString();
 
 	-- mod by sou
+    -- begin
     if StringUtils.startWith(CommandController.COMMAND_SIGN, text) == true then
         local commandStr = string.sub(text, 2)
         -- validate command string
@@ -1698,6 +1699,7 @@ function ChatFrame_TextAccepted()
         CommandController.dispatch(commandStr)                                  -- command dispatching
         return
     end
+    -- end
 
 	-- Ԥ���ж������ַ��ǲ�����Ч��˫�����춯��
 	local bChatAction = Talk : IsValidChatActionString(g_theCurrentChannel, txt);
