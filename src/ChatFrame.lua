@@ -244,7 +244,8 @@ local CommandController = {
 
     COMMANDS = {
         [1] = "goto",
-        [2] = "autoatk"
+        [2] = "autoatk",
+        [3] = "info"
     };
 
     MODE_STANDARD = 1;
@@ -365,20 +366,31 @@ end
 --- End: 'MapData' declaration
 
 --- ---------------------------------------
---  COMMANDS DECALARATION
+--  BEGIN: COMMANDS DECALARATION
 --  ---------------------------------------
 function Command_goto(arguments)
-    PushDebugMessage("Command 'goto' loaded")
+    --PushDebugMessage("Command 'goto' loaded")
 
-    local mapName = arguments[1]
-    local xPos = arguments[2]
-    local yPos = arguments[3]
+    local mapName, xPos, yPos;
+    local nArguments = table.getn(arguments);
+    if nArguments == 2 then
+        mapName = nil
+        xPos = arguments[1]
+        yPos = arguments[2]
+    else
+        mapName = arguments[1]
+        xPos = arguments[2]
+        yPos = arguments[3]
+    end
 
     -- validate map
-    local mapKey = MapData.getMapKey(mapName);
-    if mapKey == nil then
-        PushDebugMessage("[ERROR] This map is not supported: '"..mapName.."'")
-        return
+    local mapKey;
+    if mapName ~= nil then
+        mapKey = MapData.getMapKey(mapName);
+        if mapKey == nil then
+            PushDebugMessage("[ERROR] This map is not supported: '"..mapName.."'")
+            return
+        end
     end
     -- validate positions
     if xPos == nil  or yPos == nil or tonumber(xPos) < 0  or tonumber(yPos) < 0 then
@@ -386,10 +398,30 @@ function Command_goto(arguments)
         return
     end
     -- process
-    local mapID = MapData.getMapID(mapKey)
-    PushDebugMessage("map: "..mapKey.." (id="..mapID..")")
-    AutoRunToTargetEx(tonumber(xPos), tonumber(yPos), mapID);
+    local mapID = MapData.getMapID(mapKey);
+    local curSceneID = GetSceneID();
+    if mapName == nil or mapID == curSceneID then
+        AutoRunToTarget(tonumber(xPos), tonumber(yPos));
+    else
+        AutoRunToTargetEx(tonumber(xPos), tonumber(yPos), mapID);
+    end
 end
+
+function Command_info(arguments)
+    --PushDebugMessage("Command 'info' loaded")
+
+    local infoType = arguments[1]
+
+    -- validate info type value
+    if infoType == nil or string.len(infoType) == 0 then return end
+    -- process
+    infoType = string.lower(infoType)
+    if "map" == infoType then PushDebugMessage("[INFO] Map: "..GetCurrentSceneName().." (ID = "..GetSceneID()..")")
+    end
+end
+--- ---------------------------------------
+--  END: COMMANDS DECALARATION
+--  ---------------------------------------
 
 ---
 -- (Only for testing)
@@ -1667,7 +1699,6 @@ function ChatFrame_TextAccepted()
 	local txt = Chat_EditBox:GetItemElementsString();
 
 	-- mod by sou
-	PushDebugMessage(txt)
 	CommandController.process(txt)
 	
 	-- Ԥ���ж������ַ��ǲ�����Ч��˫�����춯��
