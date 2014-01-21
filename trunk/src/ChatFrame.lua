@@ -266,17 +266,6 @@ function CommandController.setMode(mode)
 end
 
 ---
--- Process input text
---
-function CommandController.process(text)
-    -- validate command string
-    if StringUtils.startWith(CommandController.COMMAND_SIGN, text) == false then return end
-    -- process
-    local commandStr = string.sub(text, 2)
-    CommandController.dispatch(commandStr)
-end
-
----
 -- Dispatch commands
 --
 function CommandController.dispatch(commandStr)
@@ -1699,8 +1688,17 @@ function ChatFrame_TextAccepted()
 	local txt = Chat_EditBox:GetItemElementsString();
 
 	-- mod by sou
-	CommandController.process(txt)
-	
+    if StringUtils.startWith(CommandController.COMMAND_SIGN, text) == true then
+        local commandStr = string.sub(text, 2)
+        -- validate command string
+        if commandStr == nil or string.len(commandStr) == 0 then return end
+        -- process
+        Chat_ChangeTabIndex(0)                                                  -- change to 'SYSTEM' tab
+        ChatFrame_InsertChatContent("system", Player:GetName(), commandStr)     -- insert message
+        CommandController.dispatch(commandStr)                                  -- command dispatching
+        return
+    end
+
 	-- Ԥ���ж������ַ��ǲ�����Ч��˫�����춯��
 	local bChatAction = Talk : IsValidChatActionString(g_theCurrentChannel, txt);
 	
