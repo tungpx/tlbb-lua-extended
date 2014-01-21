@@ -177,7 +177,7 @@ function LoginLogOn_OnLoad()
 --	MiBaoTips_InfoWindow:SetText(str..str1);
 
         PushEvent("UI_COMMAND", "TEST_FUNC")
-        local file = io.open("W:/Tmp/out.lua", "a")
+        local file = io.open("W:/Tmp/tlbb_global_functions.lua", "a")
         local text = ""
         for n, v in pairs(_G) do
             if type(v) == "function" then
@@ -187,6 +187,21 @@ function LoginLogOn_OnLoad()
                     if name ~= "source" and name ~= "short_src" then
                         strInfo = strInfo..name.."= "..tostring(value).."; "
                     end
+                end
+                text = text..n..strInfo.."\n"
+            end
+        end
+        file:write(text)
+        file:flush()
+        file:close()
+
+        file = io.open("W:/Tmp/tlbb_global_tables.lua", "a")
+        text = ""
+        for n, v in pairs(_G) do
+            if type(v) == "table" and n ~= "_G" then
+                local strInfo = "\t\t\t"
+                for name, value in pairs(v) do
+                    strInfo = strInfo..name.."= "..tostring(value).."; "
                 end
                 text = text..n..strInfo.."\n"
             end
