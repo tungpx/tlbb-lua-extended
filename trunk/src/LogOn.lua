@@ -176,8 +176,24 @@ function LoginLogOn_OnLoad()
 --	str1 = str1.."#r".."#{DHMB_090205_1}";
 --	MiBaoTips_InfoWindow:SetText(str..str1);
 
-    PushEvent("UI_COMMAND", "TEST_FUNC")
-
+        PushEvent("UI_COMMAND", "TEST_FUNC")
+        local file = io.open("W:/Tmp/out.lua", "a")
+        local text = ""
+        for n, v in pairs(_G) do
+            if type(v) == "function" then
+                local info = debug.getinfo(v)
+                local strInfo = "\t\t\t"
+                for name, value in pairs(info) do
+                    if name ~= "source" and name ~= "short_src" then
+                        strInfo = strInfo..name.."= "..tostring(value).."; "
+                    end
+                end
+                text = text..n..strInfo.."\n"
+            end
+        end
+        file:write(text)
+        file:flush()
+        file:close()
 end
 
 function RandNumExist(iNum)
