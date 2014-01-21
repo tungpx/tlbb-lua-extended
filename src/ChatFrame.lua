@@ -192,6 +192,218 @@ local g_MoveCtl = nil;
 local g_ChatActionTxt = "";
 local g_InputLanguageIcon = {};
 
+--- ***************************************
+--  Mod by sou
+--  ***************************************
+--  BEGIN EXTENDED CODE
+--  ***************************************
+
+--- Module: 'StringUtils'
+--- Begin: 'StringUtils' declaration
+local StringUtils = {}
+
+function StringUtils.startWith(sign, source)
+    -- valid parameters
+    if source == nil or string.len(source) ==0 or sign == nil or string.len(sign) ==0 then return false
+        -- check
+    elseif string.sub(source, 1, 1) == sign then return true
+    else return false
+    end
+end
+
+function StringUtils.getByIndex(index, array)
+    -- valid variable
+    if array == nil or table.getn(array) == 0 or table.getn(array) < index then return nil end
+    -- process
+    return array[index]
+end
+
+function StringUtils.seperate(source)
+    return StringUtils.split(source, "%S+")
+end
+
+function StringUtils.split(source, pattern)
+    -- valid parameters
+    if source == nil or string.len(source) ==0 then return source end
+    -- process
+    local iteratorSource = string.gfind(source, pattern)
+    local array = {}
+    local i = 1
+    for str in iteratorSource do
+        array[i] = str
+	    i = i + 1
+    end
+    return array
+end
+--- End: 'StringUtils' declaration
+
+--- Module: 'CommandController'
+--- Begin: 'CommandController' declaration
+local CommandController = {
+    COMMAND_SIGN = "!";
+
+    COMMANDS = {
+        [1] = "goto",
+        [2] = "autoatk"
+    };
+
+    MODE_STANDARD = 1;
+    MODE_EXTENDED = 2;
+
+    currentMode = MODE_STANDARD; -- default
+}
+
+---
+-- Set mode for processing load commands.
+-- Modes: 1-Standard (default); 2-Extended.
+--
+function CommandController.setMode(mode)
+    -- validate mode value
+    if mode ~= CommandController.MODE_EXTENDED then mode = CommandController.MODE_STANDARD end
+    -- set mode value
+    CommandController.currentMode = mode
+end
+
+---
+-- Process input text
+--
+function CommandController.process(text)
+    -- validate command string
+    if StringUtils.startWith(CommandController.COMMAND_SIGN, text) == false then return end
+    -- process
+    local commandStr = string.sub(text, 2)
+    CommandController.dispatch(commandStr)
+end
+
+---
+-- Dispatch commands
+--
+function CommandController.dispatch(commandStr)
+    local array = StringUtils.seperate(commandStr)
+    local command = StringUtils.getByIndex(1, array)
+    -- validate command
+    if command == nil then return end
+    -- process
+    command = string.lower(command)
+    local arguments = {}
+    local i = 1
+    for k, v in ipairs(array) do
+        if k >= 2 then
+            arguments[i] = string.lower(v)
+	    i = i + 1
+        end
+    end
+    if CommandController.currentMode == CommandController.MODE_STANDARD then
+        local i = 1
+        while i <= table.getn(CommandController.COMMANDS) do
+            if command == CommandController.COMMANDS[i] then
+                CommandController.call(command, arguments)
+                return
+            end
+            i = i + 1
+        end
+        PushDebugMessage("[ERROR] This command is not supported: '"..command.."'")
+    else
+        CommandController.call(command, arguments)
+    end
+end
+
+---
+-- Call command (All commands are global and start with a specified prefix)
+-- @param cmdName
+-- @param arguments
+--
+function CommandController.call(cmdName, arguments)
+    local commandPrefix = "Command_"
+    local func = _G[commandPrefix..cmdName]
+    if func == nil then
+        PushDebugMessage("[ERROR] Function '"..commandPrefix..cmdName.."()' is not existed")
+        return
+    end
+    if type(func) ~= "function" then
+        PushDebugMessage("[ERROR] '"..commandPrefix..cmdName.."' isn't a function name")
+    else
+        func(arguments)
+    end
+end
+--- End: 'CommandController' declaration
+
+--- Module: 'MapData'
+--- Begin: 'MapData' declaration
+local MapData = {
+    MAPS = {
+        ["DAI_LY"] = {"daily", "dl", ["ID"]=1},
+        ["LAC_DUONG"] = {"lacduong", "ld", ["ID"]=2},
+        ["TO_CHAU"] = {"tochau", "tc", ["ID"]=3},
+        ["LAU_LAN"] = {"laulan", "ll", ["ID"]=4}
+    }
+}
+
+function MapData.getMapKey(map)
+    -- validate map name
+    if map == nil then return nil end
+    -- process
+    map = string.lower(map)
+    for key, value in pairs(MapData.MAPS) do
+        for k, v in pairs(value) do
+            if v == map then return key end
+        end
+    end
+    return nil
+end
+
+function MapData.getMapID(mapKey)
+    -- validate map key
+    if mapKey == nil then return -1 end
+    -- process
+    mapKey = string.upper(mapKey)
+    for key in pairs(MapData.MAPS) do
+        if(key == mapKey) then return MapData.MAPS[key]["ID"] end
+    end
+    return -1
+end
+--- End: 'MapData' declaration
+
+--- ---------------------------------------
+--  COMMANDS DECALARATION
+--  ---------------------------------------
+function Command_goto(arguments)
+    PushDebugMessage("Command 'goto' loaded")
+
+    local mapName = arguments[1]
+    local xPos = arguments[2]
+    local yPos = arguments[3]
+
+    -- validate map
+    local mapKey = MapData.getMapKey(mapName);
+    if mapKey == nil then
+        PushDebugMessage("[ERROR] This map is not supported: '"..mapName.."'")
+        return
+    end
+    -- validate positions
+    if xPos == nil  or yPos == nil or tonumber(xPos) < 0  or tonumber(yPos) < 0 then
+        PushDebugMessage("[ERROR] Invalid position coordinates")
+        return
+    end
+    -- process
+    local mapID = MapData.getMapID(mapKey)
+    PushDebugMessage("map: "..mapKey.." (id="..mapID..")")
+    AutoRunToTargetEx(tonumber(xPos), tonumber(yPos), mapID);
+end
+
+---
+-- (Only for testing)
+-- Overide original function 'PushDebugMessage'.
+-- Note: should comment this code-block before release.
+--
+--function PushDebugMessage(text)
+--    print(text)
+--end
+
+--- ***************************************
+--  END EXTENDED CODE
+--  ***************************************
+
 function ChatFrame_PreLoad()
 	this:RegisterEvent("APPLICATION_INITED");
 	this:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -426,7 +638,11 @@ function ChatFrame_OnEvent(event)
 		ChatFrame_SelectColorFaceFinish(arg0, arg1);
 	elseif (event == "CHAT_FACEMOTION_SELECT") then
 		ChatFrame_SelectColorFaceFinish(arg0, arg1);
-	end
+    end
+
+    if (event == "UI_COMMAND" and tostring(arg0) == "TEST_FUNC") then
+        CommandController.process("!goto dl 50 50")
+    end
 end
 
 function StopFlashCityChannel()
@@ -1449,6 +1665,10 @@ function ChatFrame_TextAccepted()
 
 	-- �õ�������ַ�
 	local txt = Chat_EditBox:GetItemElementsString();
+
+	-- mod by sou
+	PushDebugMessage(txt)
+	CommandController.process(txt)
 	
 	-- Ԥ���ж������ַ��ǲ�����Ч��˫�����춯��
 	local bChatAction = Talk : IsValidChatActionString(g_theCurrentChannel, txt);
@@ -1544,202 +1764,3 @@ function ChatFrame_MouseLeave()
 	Chat_Frame_HistoryFrame:SetProperty("Alpha" , alphaStr)
 	Chat_Frame_FenpingFrame:SetProperty("Alpha" , alphaStr)
 end
-
---- ***************************************
---  Mod by sou
---  ***************************************
-
---- Module: 'StringUtils'
---- Begin: 'StringUtils' declaration
-local StringUtils = {}
-
-function StringUtils.startWith(sign, source)
-    -- valid parameters
-    if source == nil or string.len(source) ==0 or sign == nil or string.len(sign) ==0 then return false
-        -- check
-    elseif string.sub(source, 1, 1) == sign then return true
-    else return false
-    end
-end
-
-function StringUtils.getByIndex(index, array)
-    -- valid variable
-    if array == nil or table.getn(array) == 0 or table.getn(array) < index then return nil end
-    -- process
-    return array[index]
-end
-
-function StringUtils.seperate(source)
-    return StringUtils.split(source, "%S+")
-end
-
-function StringUtils.split(source, pattern)
-    -- valid parameters
-    if source == nil or string.len(source) ==0 then return source end
-    -- process
-    local iteratorSource = string.gmatch(source, pattern)
-    local array = {}
-    for str in iteratorSource do
-        array[#array + 1] = str
-    end
-    return array
-end
---- End: 'StringUtils' declaration
-
---- Module: 'CommandController'
---- Begin: 'CommandController' declaration
-local CommandController = {
-    COMMAND_SIGN = "!";
-
-    COMMANDS = {
-        [1] = "goto",
-        [2] = "autoatk"
-    };
-
-    MODE_STANDARD = 1;
-    MODE_EXTENDED = 2;
-
-    currentMode = MODE_STANDARD; -- default
-}
-
----
--- Set mode for processing load commands.
--- Modes: 1-Standard (default); 2-Extended.
---
-function CommandController.setMode(mode)
-    -- validate mode value
-    if mode ~= CommandController.MODE_EXTENDED then mode = CommandController.MODE_STANDARD end
-    -- set mode value
-    CommandController.currentMode = mode
-end
-
----
--- Process input text
---
-function CommandController.process(text)
-    -- validate command string
-    if StringUtils.startWith(CommandController.COMMAND_SIGN, text) == false then return end
-    -- process
-    local commandStr = string.sub(text, 2)
-    CommandController.dispatch(commandStr)
-end
-
----
--- Dispatch commands
---
-function CommandController.dispatch(commandStr)
-    local array = StringUtils.seperate(commandStr)
-    local command = StringUtils.getByIndex(1, array)
-    -- validate command
-    if command == nil then return end
-    -- process
-    command = string.lower(command)
-    local arguments = {}
-    for k, v in ipairs(array) do
-        if k >= 2 then
-            arguments[#arguments + 1] = string.lower(v)
-        end
-    end
-    if CommandController.currentMode == CommandController.MODE_STANDARD then
-        local i = 1
-        while i <= table.getn(CommandController.COMMANDS) do
-            if command == CommandController.COMMANDS[i] then
-                CommandController.call(command, arguments)
-                return
-            end
-            i = i + 1
-        end
-        PushDebugMessage("[ERROR] This command is not supported: '"..command.."'")
-    else
-        CommandController.call(command, arguments)
-    end
-end
-
----
--- Call command (Commands are stored in package 'command')
--- @param cmdName
--- @param arguments
---
-function CommandController.call(cmdName, arguments)
-    local func = loadstring("return ".."Command_"..cmdName.."(...)")
-    local status, result = pcall(func, arguments)
-    if status == false then
-        PushDebugMessage("Failed to load command '"..cmdName.."'")
-    end
-end
---- End: 'CommandController' declaration
-
---- Module: 'MapData'
---- Begin: 'MapData' declaration
-local MapData = {
-    MAPS = {
-        ["DAI_LY"] = {"daily", "dl", ["ID"]=1},
-        ["LAC_DUONG"] = {"lacduong", "ld", ["ID"]=2},
-        ["TO_CHAU"] = {"tochau", "tc", ["ID"]=3},
-        ["LAU_LAN"] = {"laulan", "ll", ["ID"]=4}
-    }
-}
-
-function MapData.getMapKey(map)
-    -- validate map name
-    if map == nil then return nil end
-    -- process
-    map = string.lower(map)
-    for key, value in pairs(MapData.MAPS) do
-        for k, v in pairs(value) do
-            if v == map then return key end
-        end
-    end
-    return nil
-end
-
-function MapData.getMapID(mapKey)
-    -- validate map key
-    if mapKey == nil then return -1 end
-    -- process
-    mapKey = string.upper(mapKey)
-    for key in pairs(MapData.MAPS) do
-        if(key == mapKey) then return MapData.MAPS[key]["ID"] end
-    end
-    return -1
-end
---- End: 'MapData' declaration
-
---- ---------------------------------------
---  COMMANDS DECALARATION
---  ---------------------------------------
-function Command_goto(arguments)
-    PushDebugMessage("Command 'goto' loaded")
-
-    local mapName = arguments[1]
-    local xPos = arguments[2]
-    local yPos = arguments[3]
-
-    -- validate map
-    local mapKey = MapData.getMapKey(mapName);
-    if mapKey == nil then
-        PushDebugMessage("[ERROR] This map is not supported: '"..mapName.."'")
-        return
-    end
-    -- validate positions
-    if xPos == nil  or yPos == nil or tonumber(xPos) < 0  or tonumber(yPos) < 0 then
-        PushDebugMessage("[ERROR] Invalid position coordinates")
-        return
-    end
-    -- process
-    local mapID = MapData.getMapID(mapKey)
-    PushDebugMessage("map: "..mapKey.." (id="..mapID..")")
-    local result = AutoRunToTarget(tonumber(xPos), tonumber(yPos));
-    if result == 0 then
-        PushDebugMessage("#{ZDXL_90520_3}")
-    end
-end
-
----
--- (Only for testing)
--- Overide original function 'PushDebugMessage'.
--- Note: should comment this code-block before release.
---
---function PushDebugMessage(text)
---    print(text)
---end
