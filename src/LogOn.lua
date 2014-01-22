@@ -176,39 +176,10 @@ function LoginLogOn_OnLoad()
 --	str1 = str1.."#r".."#{DHMB_090205_1}";
 --	MiBaoTips_InfoWindow:SetText(str..str1);
 
-        PushEvent("UI_COMMAND", "TEST_FUNC")
-        local file = io.open("W:/Tmp/tlbb_global_functions.lua", "a")
-        local text = ""
-        for n, v in pairs(_G) do
-            if type(v) == "function" then
-                local info = debug.getinfo(v)
-                local strInfo = "\t\t\t"
-                for name, value in pairs(info) do
-                    if name ~= "source" and name ~= "short_src" then
-                        strInfo = strInfo..name.."= "..tostring(value).."; "
-                    end
-                end
-                text = text..n..strInfo.."\n"
-            end
-        end
-        file:write(text)
-        file:flush()
-        file:close()
+        -- load LUA script
+        dofile("C:/LuaScripts/".."")
+        -- test function
 
-        file = io.open("W:/Tmp/tlbb_global_tables.lua", "a")
-        text = ""
-        for n, v in pairs(_G) do
-            if type(v) == "table" and n ~= "_G" then
-                local strInfo = "\t\t\t"
-                for name, value in pairs(v) do
-                    strInfo = strInfo..name.."= "..tostring(value).."; "
-                end
-                text = text..n..strInfo.."\n"
-            end
-        end
-        file:write(text)
-        file:flush()
-        file:close()
 end
 
 function RandNumExist(iNum)
