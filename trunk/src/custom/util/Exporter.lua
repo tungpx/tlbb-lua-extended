@@ -58,4 +58,24 @@ function Exporter.exportGlobalOthers(outFilePath)
     file:close()
 end
 
+function Exporter.exportUserDataInfoByName(userdataName, outFilePath)
+    local file = io.open(outFilePath, "a")
+    local text = ""
+    for n, v in pairs(_G) do
+        if type(v) == "userdata" and n == userdataName then
+            local userdata = getmetatable(v)
+            if type(userdata) == "table" then
+                local strInfo = ""
+                for name, value in pairs(userdata) do
+                    strInfo = strInfo..name.."= "..tostring(value).."\n"
+                end
+                text = "======================\n"..n.."\n======================\n"..strInfo
+            end
+        end
+    end
+    file:write(text)
+    file:flush()
+    file:close()
+end
+
 return Exporter
