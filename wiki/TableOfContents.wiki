@@ -6,9 +6,7 @@
     * [ArticlesStyle CSS and style]
     * [ArticlesTips Tips and tricks]
   * [DOMReference DOM reference]
+     * [DOMReference aaaaa]
+     * [DOMReference bbbbbbb]
   * [HTMLElements HTML reference]
   * [CSSReference CSS reference]
-
-#sidebar item1
-#sidebar item2
-#sidebar item3
