@@ -1,5 +1,3 @@
-#summary Content of wiki
-
 ===contents===
 
   * *[Test]*
