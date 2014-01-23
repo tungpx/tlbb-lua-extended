@@ -13,4 +13,4 @@
     * [PlayerPackage#GetBagItemNum PlayerPackage:GetBagItemNum]
 	
   ===Useful===  
-_[https://code.google.com/p/support/wiki/WikiFAQ#Can_I_download_wiki_content_as_HTML? How to download wiki content as HTML]_
+  _[https://code.google.com/p/support/wiki/WikiFAQ#Can_I_download_wiki_content_as_HTML? How to download wiki content as HTML]_
