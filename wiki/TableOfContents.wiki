@@ -1,7 +1,1 @@
-<wiki:toc max_depth="1" />
-
-*Common Functions*
-
-*Common Functions*
-
 *Common Functions*
