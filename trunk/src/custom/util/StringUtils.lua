@@ -16,6 +16,14 @@ function StringUtils.startWith(sign, source)
     end
 end
 
+function StringUtils.endWith(sign, source)
+    -- valid parameters
+    if source == nil or string.len(source) ==0 or sign == nil or string.len(sign) ==0 then return false
+    -- check
+    else return sign == "" or string.sub(source, -string.len(sign)) == sign
+    end
+end
+
 function StringUtils.getByIndex(index, array)
     -- valid variable
     if array == nil or table.getn(array) == 0 or table.getn(array) < index then return nil end
