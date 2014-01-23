@@ -1,10 +1,7 @@
 *Common Functions*
 
-Player
-    # func-01
-        # func-011
-    # func-02
-
- # DataPool
-  # func-03
-  # func-04
+* A list
+  * Of bulleted items
+    # This is a numbered sublist
+    # Which is done by indenting further
+  * And back to the main bulleted list
