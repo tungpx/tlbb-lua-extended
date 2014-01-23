@@ -2,7 +2,7 @@
 
 ===contents===
 
-  * *[Start Introduction]*
+  * *[Test]*
   * *[OMUsage Simulations]*
     * [SetupOverview Getting started (local simulations)]
       * [Binaries Pre-compiled binaries]
