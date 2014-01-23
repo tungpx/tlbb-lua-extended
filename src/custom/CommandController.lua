@@ -10,6 +10,7 @@ dofile("C:/LuaScripts/util/StringUtils.lua")
 dofile("C:/LuaScripts/command/goto.lua")
 dofile("C:/LuaScripts/command/autoatk.lua")
 dofile("C:/LuaScripts/command/info.lua")
+dofile("C:/LuaScripts/command/call.lua")
 
 CommandController = {
     COMMAND_SIGN = "!";
@@ -17,7 +18,8 @@ CommandController = {
     COMMANDS = {
         [1] = "goto",
         [2] = "autoatk",
-        [3] = "info"
+        [3] = "info",
+        ["CALL"] = "call"
     };
 
     MODE_STANDARD = 1;
@@ -47,6 +49,12 @@ function CommandController.dispatch(commandStr)
     if command == nil then return end
     -- process
     command = string.lower(command)
+	
+	if command == CommandController.COMMANDS["CALL"] then 
+		CommandController.call(command, string.sub(commandStr, string.len(command)+1))
+		return
+	end
+	
     local arguments = {}
     local i = 1
     for k, v in ipairs(array) do
