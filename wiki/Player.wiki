@@ -1,0 +1,7 @@
+==GetName==
+
+==UseSkillInLua_Const==
+
+==LeaveTeam==
+
+==GetPos==
