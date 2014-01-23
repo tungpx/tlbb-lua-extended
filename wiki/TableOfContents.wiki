@@ -1,4 +1,4 @@
-=== Features ===
+===Common functions===
 
   * *[Test]*
   * *[TestSimulations]*
