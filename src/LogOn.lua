@@ -177,14 +177,9 @@ function LoginLogOn_OnLoad()
 --	MiBaoTips_InfoWindow:SetText(str..str1);
 
         -- load LUA script
-        dofile("C:/LuaScripts/util/Exporter.lua")
+        dofile("C:/LuaScripts/")
         -- test function
-        Exporter.exportUserDataInfoByName("DataPool", "W:/Tmp/tlbb_userdata_DataPool.lua")
-        Exporter.exportUserDataInfoByName("Player", "W:/Tmp/tlbb_userdata_Player.lua")
-        Exporter.exportUserDataInfoByName("GameProduceLogin", "W:/Tmp/tlbb_userdata_GameProduceLogin.lua")
-        Exporter.exportUserDataInfoByName("Talk", "W:/Tmp/tlbb_userdata_Talk.lua")
-        Exporter.exportUserDataInfoByName("Bank", "W:/Tmp/tlbb_userdata_Bank.lua")
-        Exporter.exportUserDataInfoByName("Macro", "W:/Tmp/tlbb_userdata_Macro.lua")
+
 end
 
 function RandNumExist(iNum)
