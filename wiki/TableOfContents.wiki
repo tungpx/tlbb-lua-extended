@@ -1,4 +1,3 @@
-#labels aaaa
 *Common Functions*
 
 * [Articles HOWTO articles]
