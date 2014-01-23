@@ -3,3 +3,8 @@
 * A list
    # This is a numbered sublist
    # Which is done by indenting further
+
+* Notice that it is rendered
+  # At the same levels
+  # As the above lists.
+ * Despite the different indentation levels.
