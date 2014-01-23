@@ -1,1 +1,5 @@
 *Common Functions*
+
+* Player
+  * Function 1
+  * Function 2
