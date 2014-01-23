@@ -1,4 +1,4 @@
-  * *[GettingStarted Getting Started]*
+  ===[GettingStarted Getting Started]===
   
   ===Common functions===
   * *Player*
