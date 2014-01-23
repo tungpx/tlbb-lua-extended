@@ -1,6 +1,6 @@
-===Common functions===
-
   * *[GettingStarted Getting Started]*<br/>
+
+===Common functions===
 
   * *Player*
     * [Player#GetName Player:GetName]
