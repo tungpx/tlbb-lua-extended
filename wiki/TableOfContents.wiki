@@ -1,8 +1,8 @@
 ===Common functions===
 
   * *[Test]*
-  * *[TestSimulations]*
-    * [SetupOverview Getting started (local simulations)]
+  * *Player*
+    * [Player_GetName Player:GetName]
       * [Binaries Pre-compiled binaries]
       * [UtilsWindows Useful utilities on Windows]
     * Scenario design
