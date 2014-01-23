@@ -7,5 +7,5 @@
     * [Player#LeaveTeam Player:LeaveTeam]
     * [Player#GetPos Player:GetPos]
 	
-  _[https://code.google.com/p/support/wiki/WikiSyntax WikiSyntax]_
+  _[https://code.google.com/p/support/wiki/WikiSyntax WikiSyntax]_<br/>
   _[https://code.google.com/p/support/wiki/WikiFAQ#Can_I_download_wiki_content_as_HTML? How to download wiki content as HTML]_
