@@ -6,6 +6,11 @@
     * [Player#UseSkillInLua_Const Player:UseSkillInLua_Const]
     * [Player#LeaveTeam Player:LeaveTeam]
     * [Player#GetPos Player:GetPos]
+  * *PlayerPackage*
+    * [PlayerPackage#UseItem PlayerPackage:UseItem]
+    * [PlayerPackage#PickAllItem PlayerPackage:PickAllItem]
+    * [PlayerPackage#PackUpPacket PlayerPackage:PackUpPacket]
+    * [PlayerPackage#GetBagItemNum PlayerPackage:GetBagItemNum]
 	
   _[https://code.google.com/p/support/wiki/WikiSyntax WikiSyntax]_<br/>
   _[https://code.google.com/p/support/wiki/WikiFAQ#Can_I_download_wiki_content_as_HTML? How to download wiki content as HTML]_
