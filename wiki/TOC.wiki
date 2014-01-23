@@ -1,6 +1,7 @@
 ===Common functions===
 
   * *[GettingStarted Getting Started]*
+
   * *Player*
     * [Player#GetName Player:GetName]
     * [Player#UseSkillInLua_Const Player:UseSkillInLua_Const]
