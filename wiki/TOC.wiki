@@ -1,6 +1,6 @@
 ===Common functions===
 
-  * *[GettingStarted Getting Started]*
+  * *[GettingStarted Getting Started]*<br/>
 
   * *Player*
     * [Player#GetName Player:GetName]
