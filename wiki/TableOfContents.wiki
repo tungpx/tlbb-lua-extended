@@ -1,11 +1,10 @@
 *Common Functions*
 
-<wiki:toc max_depth="3" />
-
-* Player
+== Player ==
  # func-01
+    # func-011
  # func-02
 
-* DataPool
- # func-03
- # func-04
+ # DataPool
+  # func-03
+  # func-04
