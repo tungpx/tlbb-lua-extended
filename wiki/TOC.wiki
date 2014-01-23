@@ -1,7 +1,6 @@
   * *[GettingStarted Getting Started]*<br/>
 
   ===Common functions===
-
   * *Player*
     * [Player#GetName Player:GetName]
     * [Player#UseSkillInLua_Const Player:UseSkillInLua_Const]
@@ -13,4 +12,5 @@
     * [PlayerPackage#PackUpPacket PlayerPackage:PackUpPacket]
     * [PlayerPackage#GetBagItemNum PlayerPackage:GetBagItemNum]
 	
-  _[https://code.google.com/p/support/wiki/WikiFAQ#Can_I_download_wiki_content_as_HTML? How to download wiki content as HTML]_
+  ===Useful===  
+_[https://code.google.com/p/support/wiki/WikiFAQ#Can_I_download_wiki_content_as_HTML? How to download wiki content as HTML]_
