@@ -67,6 +67,9 @@ function LoginLogOn_PreLoad()
 	this:RegisterEvent("FEIXIN_LOGON_ACCOUNT"); --���ŵ�½�ɹ�
 	this:RegisterEvent("FEIXIN_LOGON_CLOSE"); --ȡ����Ű�ť
 
+    this:RegisterEvent("UI_COMMAND");
+
+    require("lua50")
 
 end
 
@@ -177,8 +180,30 @@ function LoginLogOn_OnLoad()
 --	MiBaoTips_InfoWindow:SetText(str..str1);
 
         -- load LUA script
-        dofile("C:/LuaScripts/")
+        --dofile("C:/LuaScripts/")
         -- test function
+
+        local socket = dofile("C:/LuaScripts/socket/lua/socket.lua")
+        --lsocket_libInfo()
+
+        local host = "*"  -- localhost
+        local port = 8889 -- listening port number
+        local server = assert(bind(host, port))
+        -- loop forever waiting for clients
+        while true do
+            -- wait for a connection from any client
+            local client = server:accept()
+            -- make sure we don't block waiting for this client's line
+            client:settimeout(10)
+            -- receive the line
+            local line, err = client:receive()
+            -- if there was no error, send it back to the client
+            if not err then
+                PushDebugMessage("Okay")
+            end
+            -- done with client, close the object
+            client:close()
+        end
 
 end
 
@@ -372,7 +397,23 @@ function LoginLogOn_OnEvent(event)
 		g_isfeixinlogin  = 1
 		LogOn_FeixinShow();
 		--LogOn_FeixinGoback();
-	end
+    end
+
+  if(event == "UI_COMMAND" and arg0 == "TEST_FUNCTION") then
+      local socket = dofile("C:/LuaScripts/socket/lua/socket.lua")
+      --lsocket_libInfo()
+
+      local host = "127.0.0.1"
+      local port = 8889
+
+      local tcp = assert(socket.tcp())
+      tcp:connect(host, port);
+
+      tcp:send("Aloha\n");
+
+      tcp:close()
+  end
+
 end
 
 function LogOn_Initilize()
@@ -406,6 +447,9 @@ end
 -- �˵�������ѡ�����
 --
 function LogOn_ExitToSelectServer()
+
+    PushEvent("UI_COMMAND", "TEST_FUNCTION")
+
 -- �˵�������ѡ�����
 	if g_isfeixinlogin == 0 then
 		return
