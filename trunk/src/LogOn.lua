@@ -183,28 +183,6 @@ function LoginLogOn_OnLoad()
         --dofile("C:/LuaScripts/")
         -- test function
 
-        local socket = dofile("C:/LuaScripts/socket/lua/socket.lua")
-        --lsocket_libInfo()
-
-        local host = "*"  -- localhost
-        local port = 8889 -- listening port number
-        local server = assert(bind(host, port))
-        -- loop forever waiting for clients
-        while true do
-            -- wait for a connection from any client
-            local client = server:accept()
-            -- make sure we don't block waiting for this client's line
-            client:settimeout(10)
-            -- receive the line
-            local line, err = client:receive()
-            -- if there was no error, send it back to the client
-            if not err then
-                PushDebugMessage("Okay")
-            end
-            -- done with client, close the object
-            client:close()
-        end
-
 end
 
 function RandNumExist(iNum)
